@@ -1,5 +1,8 @@
 # Persistent Memory AI Assistant
 
+**Live Demo:** [https://ai.sanyamgarg.com](https://ai.sanyamgarg.com)
+*(Hosted on my private server, exposed via Cloudflare Tunnel)*
+
 ## Project Overview
 
 This project implements a context aware chatbot using Cloudflare services. The AI remembers conversation history by storing state in a key value store. The application uses a hybrid architecture with a serverless backend and a locally hosted frontend exposed via a secure tunnel.
