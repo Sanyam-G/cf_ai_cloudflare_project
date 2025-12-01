@@ -1,6 +1,3 @@
-Here is the `README.md` file. It avoids emojis and dashes in the text while explaining the architecture and deployment steps.
-
-```markdown
 # Persistent Memory AI Assistant
 
 ## Project Overview
