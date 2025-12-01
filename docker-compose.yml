@@ -1,0 +1,14 @@
+version: '3'
+services:
+  web:
+    image: nginx:alpine
+    container_name: memory_ai
+    restart: unless-stopped
+    volumes:
+      - ./:/usr/share/nginx/html:ro
+    networks:
+      - cloudflared_network
+
+networks:
+  cloudflared_network:
+    external: true

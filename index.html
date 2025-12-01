@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uplink // Persistent AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div>> SYSTEM_UPLINK: ONLINE</div>
+    <div id="session-display">ID: ...</div>
+</header>
+
+<div id="chat-container">
+    <div class="message assistant">
+        > System initialized.<br>> Memory blocks active.
+    </div>
+</div>
+
+<div id="input-area">
+    <input type="text" id="user-input" placeholder="Enter command..." autocomplete="off">
+    <button id="send-btn">TRANSMIT</button>
+</div>
+
+<script>
+    // PASTE YOUR WORKER URL HERE vvvvvvv
+    const API_URL = "https://memory-ai-assistant.sanyamg2006.workers.dev"; 
+
+    var sID = localStorage.getItem('session_id');
+    if (!sID) {
+        sID = 'sess_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('session_id', sID);
+    }
+    document.getElementById('session-display').innerText = `ID: ${sID}`;
+
+    const chatBox = document.getElementById('chat-container');
+    const input = document.getElementById('user-input');
+    const btn = document.getElementById('send-btn');
+
+    function addMsg(role, txt) {
+        let d = document.createElement('div');
+        d.className = `message ${role}`;
+        d.innerHTML = txt.replace(/\n/g, '<br>');
+        chatBox.appendChild(d);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function send() {
+        let val = input.value.trim();
+        if (!val) return;
+
+        addMsg('user', `> ${val}`);
+        input.value = ''; input.disabled = true; btn.innerText = "...";
+
+        try {
+            let res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: val, sessionId: sID })
+            });
+
+            if (!res.ok) throw new Error("API Error");
+            let json = await res.json();
+            addMsg('assistant', `> ${json.response}`);
+        } catch (e) {
+            addMsg('assistant', `> ERROR: ${e.message}`);
+        } finally {
+            input.disabled = false; input.focus(); btn.innerText = "TRANSMIT";
+        }
+    }
+
+    btn.addEventListener('click', send);
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') send();
+    });
+</script>
+</body>
+</html>
